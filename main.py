@@ -1,0 +1,21 @@
+
+from fastapi import FastAPI, HTTPException
+from fastapi.params import Path, Query, Body
+from starlette import status
+from starlette.responses import HTMLResponse, FileResponse, JSONResponse, Response, RedirectResponse
+from starlette.staticfiles import StaticFiles
+
+from database import engine, Base
+from routers import users
+from routers.notes import router as notes_router
+from routers.admin import router as adminka
+
+Base.metadata.create_all(bind=engine)
+app=FastAPI(title="To-Do List Api", description="Для заметок")
+@app.get("/")
+def home():
+    return {"message": "To-Do List Api"}
+
+app.include_router(users.router)
+app.include_router(notes_router)
+app.include_router(adminka)
